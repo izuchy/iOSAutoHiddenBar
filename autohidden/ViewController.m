@@ -13,6 +13,7 @@
     CGPoint firstOffset;
     UIEdgeInsets defaultInsets;
     UIEdgeInsets defaultScrollInsets;
+    Boolean statusBarHidden;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @end
@@ -24,6 +25,7 @@ static const NSInteger kAutoHiddenOffset = 100;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    statusBarHidden = NO;
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:(id)self];
 }
@@ -41,6 +43,7 @@ static const NSInteger kAutoHiddenOffset = 100;
     if(self.tableView.contentInset.top !=0){
         defaultInsets = self.tableView.contentInset;
         defaultScrollInsets = self.tableView.scrollIndicatorInsets;
+        statusBarHidden = YES;
     }
 }
 
@@ -55,6 +58,7 @@ static const NSInteger kAutoHiddenOffset = 100;
             [self.navigationController setNavigationBarHidden:YES animated:YES];
             self.tableView.contentInset = UIEdgeInsetsMake(0,0,0,0);
             self.tableView.scrollIndicatorInsets=UIEdgeInsetsMake(0,0,0,0);
+            statusBarHidden = NO;
         }
     }else if(totalOffset.y > kAutoHiddenOffset){
         if(self.navigationController.navigationBarHidden){
@@ -81,6 +85,10 @@ static const NSInteger kAutoHiddenOffset = 100;
     tvcell.textLabel.text = [[NSString alloc] initWithFormat:@"%ld行目のセル", indexPath.row + 1];
     tvcell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld行目のセル", indexPath.row + 1];
     return tvcell;
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return statusBarHidden;
 }
 
 
